@@ -8,8 +8,6 @@ const X_SPACE : f32 = 40.0;
 const Y_SPACE : f32 = 40.0;
 const RADIUS: f32 = 5.0;
 
-const NUMBERS: bool = true;
-
 enum Side {
     Right,
     Up,
@@ -26,6 +24,7 @@ async fn main() {
     let mut vec: Vec<(u32, i32, i32)> = Vec::new();
 
     let mut paused = false;
+    let mut numbers = true;
 
     loop {
         clear_background(BLACK);
@@ -46,6 +45,13 @@ async fn main() {
         if paused && is_key_down(KeyCode::Minus) {
             scale -= 5.0 * time::get_frame_time();
         }
+
+        if is_key_pressed(KeyCode::N) {
+            numbers = !numbers;
+        }
+
+        //scale bounds
+        scale = scale.clamp(0.2, 20.0);
 
         // draw_circle(w/2.0, h/2.0, 8.0, WHITE);
         for i in (vec.last().or_else(|| {Some(&(0_u32, 0, 0))}).unwrap().0 as u32)..limit {
@@ -113,7 +119,7 @@ async fn main() {
 
 
         for (i, x, y) in vec.iter() {
-            draw_num(*i, (*x, *y), (w, h), scale);
+            draw_num(*i, (*x, *y), (w, h), scale, numbers);
         }
 
         if !paused {
@@ -125,7 +131,7 @@ async fn main() {
 }
 
 
-fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32), scale: f32) {
+fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32), scale: f32, numbers: bool) {
     
     let fontsize = FONT_SIZE / ((1.18_f32).powf((num as f32).log10().floor() + 1.0)) * (1.0/scale);
 
@@ -137,7 +143,7 @@ fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32), scale: f32) {
     //text size debugging
     // draw_rectangle_lines(x - text_dimensions.width/2.0, y - text_dimensions.height/2.0, text_dimensions.width, text_dimensions.height, 1.0, RED);
 
-    if NUMBERS {
+    if numbers {
         draw_text(&num.to_string(), x - text_dimensions.width/2.0, y + text_dimensions.height/2.0, fontsize, WHITE);
     } else {
         draw_circle(x, y, RADIUS / scale, WHITE);
