@@ -23,7 +23,7 @@ async fn main() {
 
     let mut scale = 1.0;
     
-    let mut vec: Vec<(i32, i32)> = Vec::new();
+    let mut vec: Vec<(u32, i32, i32)> = Vec::new();
 
     loop {
         clear_background(BLACK);
@@ -33,13 +33,13 @@ async fn main() {
         let limit = (2*(scale as u32 + 8)).pow(3);
 
         // draw_circle(w/2.0, h/2.0, 8.0, WHITE);
-        for i in (vec.len() as u32)..limit {
+        for i in (vec.last().or_else(|| {Some(&(0_u32, 0, 0))}).unwrap().0 as u32)..limit {
             if i == 0 {
                 continue;
             }
 
             if i == 1 {
-                vec.push((0, 0));
+                vec.push((1, 0, 0));
 
                 continue;
             } 
@@ -92,13 +92,13 @@ async fn main() {
                 Down => (side_coord, -(layer as i32 - 1)),
             };
 
-            vec.push(coords);
+            vec.push((i, coords.0, coords.1));
         }
 
 
 
-        for i in 1..limit {
-            draw_num(i, vec[i as usize - 1], (w, h), scale);
+        for (i, x, y) in vec.iter() {
+            draw_num(*i, (*x, *y), (w, h), scale);
         }
 
 
@@ -111,7 +111,7 @@ async fn main() {
 
 fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32), scale: f32) {
     
-    let fontsize = FONT_SIZE / ((1.18_f32).powf((num as f32).log10().floor() + 1.0));
+    let fontsize = FONT_SIZE / ((1.18_f32).powf((num as f32).log10().floor() + 1.0)) * (1.0/scale);
 
     let text_dimensions = measure_text(&num.to_string(), None, fontsize as u16, 1.0);
 
