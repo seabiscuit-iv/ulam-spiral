@@ -34,7 +34,7 @@ async fn main() {
 
         // draw_circle(w/2.0, h/2.0, 8.0, WHITE);
         for i in (vec.last().or_else(|| {Some(&(0_u32, 0, 0))}).unwrap().0 as u32)..limit {
-            if i == 0 {
+            if i == 0 || !is_prime(i){
                 continue;
             }
 
@@ -127,4 +127,11 @@ fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32), scale: f32) {
         draw_circle(x, y, RADIUS / scale, WHITE);
     }
     
+}
+
+
+fn is_prime(n: u32) -> bool{
+    return (2..n).filter(|i| {
+        n % i == 0
+    }).count() == 0;
 }
