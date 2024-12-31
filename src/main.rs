@@ -17,11 +17,11 @@ enum Side {
 async fn main() {    
     use Side::*;
 
-    let mut scale = 1.0;
+    let mut scale = 0.4;
     
     let mut vec: Vec<(u32, i32, i32)> = Vec::new();
 
-    let mut paused = false;
+    let mut paused = true;
     let mut numbers = true;
 
     loop {
@@ -37,11 +37,11 @@ async fn main() {
         } 
 
         if paused && is_key_down(KeyCode::Equal) {
-            scale += 5.0 * time::get_frame_time();
+            scale += 3.0 * time::get_frame_time();
         }
 
         if paused && is_key_down(KeyCode::Minus) {
-            scale -= 5.0 * time::get_frame_time();
+            scale -= 3.0 * time::get_frame_time();
         }
 
         if is_key_pressed(KeyCode::N) {
@@ -121,7 +121,7 @@ async fn main() {
         }
 
         if !paused {
-            scale += time::get_frame_time() / 4.0;
+            scale += time::get_frame_time() / 8.0;
         }
 
         next_frame().await
