@@ -1,6 +1,4 @@
 use core::panic;
-use std::{path::Iter};
-
 use macroquad::{prelude::*, time};
 
 const FONT_SIZE : f32 = 40.0;
