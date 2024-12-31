@@ -22,6 +22,8 @@ async fn main() {
     use Side::*;
 
     let mut scale = 1.0;
+    
+    let mut vec: Vec<(i32, i32)> = Vec::new();
 
     loop {
         clear_background(BLACK);
@@ -31,9 +33,13 @@ async fn main() {
         let limit = (2*(scale as u32 + 8)).pow(3);
 
         // draw_circle(w/2.0, h/2.0, 8.0, WHITE);
-        for i in 1..limit {
+        for i in (vec.len() as u32)..limit {
+            if i == 0 {
+                continue;
+            }
+
             if i == 1 {
-                draw_num(i, (0, 0), (w, h), scale);
+                vec.push((0, 0));
 
                 continue;
             } 
@@ -86,10 +92,15 @@ async fn main() {
                 Down => (side_coord, -(layer as i32 - 1)),
             };
 
-            
-            //text drawing
-            draw_num(i, coords, (w, h), scale);
+            vec.push(coords);
         }
+
+
+
+        for i in 1..limit {
+            draw_num(i, vec[i as usize - 1], (w, h), scale);
+        }
+
 
         scale += time::get_frame_time() / 4.0;
 
