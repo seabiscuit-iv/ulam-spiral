@@ -23,7 +23,7 @@ async fn main() {
         let (w, h) = (screen_width(), screen_height());
 
         // draw_circle(w/2.0, h/2.0, 8.0, WHITE);
-        for i in 1..20_u32 {
+        for i in 1..400_u32 {
             if i == 1 {
                 draw_num(i, (0, 0), (w, h));
 
@@ -90,7 +90,7 @@ async fn main() {
 
 fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32)) {
     
-    let fontsize = FONT_SIZE / ((1.15_f32).powf((num as f32).log10().floor() + 1.0));
+    let fontsize = FONT_SIZE / ((1.18_f32).powf((num as f32).log10().floor() + 1.0));
 
     let text_dimensions = measure_text(&num.to_string(), None, fontsize as u16, 1.0);
 
