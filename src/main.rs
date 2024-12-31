@@ -8,7 +8,7 @@ const X_SPACE : f32 = 40.0;
 const Y_SPACE : f32 = 40.0;
 const RADIUS: f32 = 5.0;
 
-const NUMBERS: bool = false;
+const NUMBERS: bool = true;
 
 enum Side {
     Right,
@@ -25,12 +25,27 @@ async fn main() {
     
     let mut vec: Vec<(u32, i32, i32)> = Vec::new();
 
+    let mut paused = false;
+
     loop {
         clear_background(BLACK);
 
         let (w, h) = (screen_width(), screen_height());
 
         let limit = (2*(scale as u32 + 8)).pow(3);
+
+        // keybindings
+        if is_key_pressed(KeyCode::Space) {
+            paused = !paused;
+        } 
+
+        if paused && is_key_down(KeyCode::Equal) {
+            scale += 5.0 * time::get_frame_time();
+        }
+
+        if paused && is_key_down(KeyCode::Minus) {
+            scale -= 5.0 * time::get_frame_time();
+        }
 
         // draw_circle(w/2.0, h/2.0, 8.0, WHITE);
         for i in (vec.last().or_else(|| {Some(&(0_u32, 0, 0))}).unwrap().0 as u32)..limit {
@@ -101,8 +116,9 @@ async fn main() {
             draw_num(*i, (*x, *y), (w, h), scale);
         }
 
-
-        scale += time::get_frame_time() / 4.0;
+        if !paused {
+            scale += time::get_frame_time() / 4.0;
+        }
 
         next_frame().await
     }
@@ -115,8 +131,8 @@ fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32), scale: f32) {
 
     let text_dimensions = measure_text(&num.to_string(), None, fontsize as u16, 1.0);
 
-    let x = (center.0/2.0 +  X_SPACE * coords.0 as f32 * (1.0/scale));
-    let y = (center.1/2.0 - Y_SPACE * coords.1 as f32 * (1.0/scale));
+    let x = center.0/2.0 +  X_SPACE * coords.0 as f32 * (1.0/scale);
+    let y = center.1/2.0 - Y_SPACE * coords.1 as f32 * (1.0/scale);
 
     //text size debugging
     // draw_rectangle_lines(x - text_dimensions.width/2.0, y - text_dimensions.height/2.0, text_dimensions.width, text_dimensions.height, 1.0, RED);
@@ -131,7 +147,7 @@ fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32), scale: f32) {
 
 
 fn is_prime(n: u32) -> bool{
-    return (2..n).filter(|i| {
+    return (2..=((n as f32).sqrt().ceil() as u32)).filter(|i| {
         n % i == 0
     }).count() == 0;
 }
