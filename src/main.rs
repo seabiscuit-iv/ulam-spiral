@@ -7,6 +7,9 @@ const FONT_SIZE : f32 = 40.0;
 const X_SPACE : f32 = 40.0;
 const Y_SPACE : f32 = 40.0;
 
+const NUMBERS: bool = false;
+const RADIUS: f32 = 5.0;
+
 enum Side {
     Right,
     Up,
@@ -100,5 +103,10 @@ fn draw_num(num: u32, coords: (i32, i32), center: (f32, f32)) {
     //text size debugging
     // draw_rectangle_lines(x - text_dimensions.width/2.0, y - text_dimensions.height/2.0, text_dimensions.width, text_dimensions.height, 1.0, RED);
 
-    draw_text(&num.to_string(), x - text_dimensions.width/2.0, y + text_dimensions.height/2.0, fontsize, WHITE);
+    if NUMBERS {
+        draw_text(&num.to_string(), x - text_dimensions.width/2.0, y + text_dimensions.height/2.0, fontsize, WHITE);
+    } else {
+        draw_circle(x, y, RADIUS, WHITE);
+    }
+    
 }
